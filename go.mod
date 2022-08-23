@@ -6,7 +6,7 @@ require (
 	github.com/Jeffail/gabs v1.4.0
 	github.com/TykTechnologies/tyk v1.9.2-0.20211217130848-b04d51712be7
 	github.com/crewjam/saml v0.4.6
-	github.com/go-ldap/ldap/v3 v3.2.3
+	github.com/go-ldap/ldap/v3 v3.4.4
 	github.com/go-redis/redis/v8 v8.3.1
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
@@ -17,7 +17,7 @@ require (
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.3-0.20191026113918-67a7fdcf741f
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.2
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
 	golang.org/x/text v0.3.6
