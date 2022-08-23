@@ -9,7 +9,7 @@ require (
 	github.com/go-ldap/ldap/v3 v3.2.3
 	github.com/go-redis/redis/v8 v8.3.1
 	github.com/gorilla/mux v1.7.4
-	github.com/gorilla/sessions v1.2.0
+	github.com/gorilla/sessions v1.2.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/markbates/goth v1.64.2
 	github.com/matryer/is v1.4.0
