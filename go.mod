@@ -7,7 +7,7 @@ require (
 	github.com/TykTechnologies/tyk v1.9.2-0.20211217130848-b04d51712be7
 	github.com/crewjam/saml v0.4.6
 	github.com/go-ldap/ldap/v3 v3.2.3
-	github.com/go-redis/redis/v8 v8.3.1
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
