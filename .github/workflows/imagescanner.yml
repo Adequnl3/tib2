@@ -1,21 +1,21 @@
 
-name: Scan CVE
+name: Scan Docker Image CVE
 
 on: 
-  pull_request:
+  workflow_dispatch:
   
 jobs:
   scan:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout of tyk-identity-broker
-        uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
           
-      - name: Change directory and Make
-        run: |
-          cd ci/CVEs
-          make
+      - name: Change directory and run Make
+      - run: cd ci/imageScan
+      - run: make
+      
 
