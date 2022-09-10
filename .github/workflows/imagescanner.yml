@@ -7,14 +7,10 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-
     steps:
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-          
-      - name: Change directory and run Make
       - run: cd ci/imageScan
       - run: make
       
