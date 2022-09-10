@@ -2,6 +2,7 @@
 name: Scan Docker Image CVE
 
 on: 
+  workflow_dispatch:
   push:
   
 jobs:
