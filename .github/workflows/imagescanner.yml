@@ -18,6 +18,7 @@ jobs:
           cd ci/imageScan
           make
           pwd
+          ls
       
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@v3
