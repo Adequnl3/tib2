@@ -17,23 +17,26 @@ jobs:
       - run: |
           cd ci/imageScan
           make
+          pwd
       
-      # - name: 'update_worksheet'
-      #   uses: jroehl/gsheet.action@v1.0.0 # you can specify '@release' to always have the latest changes
-      #   with:
-      #     spreadsheetId: <spreadsheetId>
-      #     commands: | # list of commands, specified as a valid JSON string
-      #       [
-      #         { "command": "addWorksheet", "args": { "worksheetTitle": "<worksheetTitle>" }},
-      #         { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-      #         { "command": "getData", "args": { "range": "'<worksheetTitle>'!A2:B3" } }
-      #       ]
-      #   env:
-      #     GSHEET_CLIENT_EMAIL: adequnl3@gmail.com
-      #     GSHEET_PRIVATE_KEY: AIzaSyCPUYQFaOIe8poEECwmawcx6UMHJhG9oD8
-      # - name: dump results
-      #   env:
-      #     #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
-      #     RESULTS: ${{ steps.update_worksheet.outputs.results }}
-      #   run: echo "$RESULTS" | jq
+      - name: 'Send mail'
+        uses: dawidd6/action-send-mail@v3
+
+        with:
+          server_address: smtp.gmail.com
+            server_port: 465
+            secure: true
+            username: kaytest2022@gmail.com
+            password: @rsenal30
+            subject: Dockerfile Scan Result
+            to: adequnl3@gmail.com
+            from: notification@tyk.io
+            body: Please check scan result
+            attachments: unified.csv
+
+
+
+
+
+
 
