@@ -20,7 +20,7 @@ jobs:
           pwd
           ls
           docker --version
-          
+
       
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@v3
@@ -35,7 +35,7 @@ jobs:
           to: adequnl3@gmail.com
           from: kaytest2022@gmail.com
           body: Please check scan result
-          attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/Makefile
+          attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/tyk-identity-broker.json
 
 
 
