@@ -19,6 +19,8 @@ jobs:
           make
           pwd
           ls
+          docker --version
+          
       
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@v3
