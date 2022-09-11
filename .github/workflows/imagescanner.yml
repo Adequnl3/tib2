@@ -14,7 +14,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - run: |
+      - shell: bash
+        run: |
           cd ci/imageScan
           make
           pwd
