@@ -24,15 +24,15 @@ jobs:
 
         with:
           server_address: smtp.gmail.com
-            server_port: 465
-            secure: true
-            username: kaytest2022@gmail.com
-            password: @rsenal30
-            subject: Dockerfile Scan Result
-            to: adequnl3@gmail.com
-            from: notification@tyk.io
-            body: Please check scan result
-            attachments: unified.csv
+          server_port: 465
+          secure: true
+          username: kaytest2022@gmail.com
+          password: @rsenal30
+          subject: Dockerfile Scan Result
+          to: adequnl3@gmail.com
+          from: notification@tyk.io
+          body: Please check scan result
+          attachments: unified.csv
 
 
 
