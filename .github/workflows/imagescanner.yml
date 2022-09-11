@@ -31,9 +31,9 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: adequnl3@gmail.com
           GSHEET_PRIVATE_KEY: AIzaSyCPUYQFaOIe8poEECwmawcx6UMHJhG9oD8
-      - name: dump results
-        env:
-          #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
-          RESULTS: ${{ steps.update_worksheet.outputs.results }}
-        run: echo "$RESULTS" | jq
+      # - name: dump results
+      #   env:
+      #     #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
+      #     RESULTS: ${{ steps.update_worksheet.outputs.results }}
+      #   run: echo "$RESULTS" | jq
 
