@@ -1,6 +1,6 @@
 PREFIX  	:= tykio
 SCAN_REPORTS 	:= $(addsuffix .json,tyk-gateway tyk-dashboard tyk-plugin-compiler tyk-hybrid-docker tyk-pump tyk-mdcb-docker tyk-identity-broker)
-SCAN 		:= -docker scan --accept-license --json --group-issues
+SCAN 		:= -docker scan --json --group-issues
 # Any jq filter that returns an array can be used here
 FILTER 	:= .vulnerabilities | group_by(.packageName)[] | add | [ .packageName, .severity, .severityWithCritical, .version, .isUpgradeable, .isPatchable, .description, .from[0][0], .identifiers.CVE[] ]
 

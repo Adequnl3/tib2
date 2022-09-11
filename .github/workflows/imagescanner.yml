@@ -19,7 +19,6 @@ jobs:
           make
           pwd
           ls
-          docker --version
 
       
       - name: 'Send mail'
