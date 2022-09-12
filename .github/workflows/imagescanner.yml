@@ -10,14 +10,14 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    container:
-      image: makefile
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - shell: bash
         run: |
+          apt-get update -y
+          apt-get -y install make jq
           cd ci/imageScan
           make
           pwd
