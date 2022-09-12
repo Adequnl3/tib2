@@ -10,6 +10,8 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    container:
+      image: makefile
     steps:
       - uses: actions/checkout@v3
         with:
@@ -35,7 +37,7 @@ jobs:
           to: adequnl3@gmail.com
           from: kaytest2022@gmail.com
           body: Please check scan result
-          attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/tyk-identity-broker.json
+          attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/unified.csv
 
 
 
