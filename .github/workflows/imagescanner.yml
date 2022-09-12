@@ -16,7 +16,8 @@ jobs:
           fetch-depth: 1
       - shell: bash
         run: |
-          apt-get -y install make jq
+          sudo apt-get update && apt-get upgrade -y
+          sudo apt-get -y install make jq
           cd ci/imageScan
           make
           pwd
