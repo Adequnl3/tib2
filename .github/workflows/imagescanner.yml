@@ -10,34 +10,51 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    container:
+      image: makefile
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - shell: bash
         run: |
-          sudo apt-get update && apt-get upgrade -y
-          sudo apt-get -y install make jq
-          cd ci/imageScan
+          cd ci/Imagescan
           make
-          pwd
-          ls
+          cat unified.csv
 
       
-      - name: 'Send mail'
-        uses: dawidd6/action-send-mail@v3
+      # - name: 'Send mail'
+      #   uses: dawidd6/action-send-mail@v3
 
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          secure: true
-          username: kaytest2022@gmail.com
-          password: ipdizxhdrdfyozsf
-          subject: Dockerfile Scan Result
-          to: adequnl3@gmail.com
-          from: kaytest2022@gmail.com
-          body: Please check scan result
-          attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/unified.csv
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     secure: true
+      #     username: kaytest2022@gmail.com
+      #     password: ipdizxhdrdfyozsf
+      #     subject: Dockerfile Scan Result
+      #     to: adequnl3@gmail.com
+      #     from: kaytest2022@gmail.com
+      #     body: Please check scan result
+      #     attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/unified.csv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
