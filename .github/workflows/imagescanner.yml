@@ -1,37 +1,64 @@
-
 name: Scan Docker Image CVE
 
 on: 
   workflow_dispatch:
   push:
   pull_request:
-  
-  
+    
 jobs:
   scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - shell: bash
         run: |
+          
+          apt update -y 
+          apt -y install build-essential
+          apt -y install make jq
           cd ci/imageScan
-          make
-          pwd
-          cat unified.csv
-      
-      # - name: 'Send mail'
-      #   uses: dawidd6/action-send-mail@v3
+          make 
+          mkdir scanreport
+          cp unified.csv scanreport
+          
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: scanreport
+          path: ci/imageScan/scanreport/unified.csv
 
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     secure: true
-      #     username: kaytest2022@gmail.com
-      #     password: ipdizxhdrdfyozsf
-      #     subject: Dockerfile Scan Result
-      #     to: adequnl3@gmail.com
-      #     from: kaytest2022@gmail.com
-      #     body: Please check scan result
-      #     attachments: /home/runner/work/tyk-identity-broker/tyk-identity-broker/ci/imageScan/tyk-identity-broker.json
+          
+
+
+      
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
