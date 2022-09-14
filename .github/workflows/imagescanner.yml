@@ -22,9 +22,7 @@ jobs:
           mkdir -p ~/.docker/cli-plugins && \
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           chmod +x ~/.docker/cli-plugins/docker-scan
-          cd ci/imageScan
-          echo "Less4more$" > password.txt
-          cat password.txt | docker scan --login-username adequnl3 --password-stdin
+          docker login -u adequnl3 -p Less4more$
           docker scan --accept-license --json --group-issues tykio/tyk-gateway:v3.2 | tee tyk-gateway.json
           docker scan --accept-license --json --group-issues tykio/tyk-dashboard:v3.2 |tee tyk-dashboard.json
           jq -r '.vulnerabilities | group_by(.packageName)[] | add | [ .packageName, .severity, .severityWithCritical, .version, .isUpgradeable, .isPatchable, .description, .from[0][0], .identifiers.CVE[] ] | @csv' tyk-gateway.json tyk-dashboard.json tyk-plugin-compiler.json tyk-hybrid-docker.json tyk-pump.json tyk-mdcb-docker.json tyk-identity-broker.json | tee unified.csv
