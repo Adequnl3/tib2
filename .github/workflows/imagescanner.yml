@@ -33,11 +33,12 @@ jobs:
           docker login -u adequnl3 -p Less4more$
           
           make
+          cat unified.csv
 
       - uses: actions/upload-artifact@v3
         with: 
           name: scanreport
-          path: ./unified.csv
+          path: ci/imageScan/scanreport/unified.csv
      
         
           
