@@ -28,13 +28,16 @@ jobs:
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
 
+          mkdir scanreport
+          
           cd ci/imageScan
           
           docker login -u adequnl3 -p Less4more$
           
           make
-          mkdir scanreport
+          
           cp unified.csv scanreport
+          
       - uses: actions/upload-artifact@v3
         with: 
           name: scanreport
