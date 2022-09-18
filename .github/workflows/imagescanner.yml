@@ -16,17 +16,17 @@ jobs:
       - shell: bash
         run: |
           
-          apt update -y
-          apt -y install build-essential
-          apt-get  install gnupg lsb-release make jq curl
+          sudo apt update -y
+          sudo apt -y install build-essential
+          sudo apt-get  install gnupg lsb-release make jq curl
 
-          curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - && \
           echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
           apt-get update && apt-get install -y docker-ce-cli
           
           mkdir -p ~/.docker/cli-plugins && \
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
-          chmod +x ~/.docker/cli-plugins/docker-scan
+          sudo chmod +x ~/.docker/cli-plugins/docker-scan
           cd ci/imageScan
 
       - name: Login to DockerHub
