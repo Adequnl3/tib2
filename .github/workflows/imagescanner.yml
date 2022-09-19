@@ -28,9 +28,9 @@ jobs:
           mkdir -p ~/.docker/cli-plugins && \
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
-
-          chmod +x ./.github/workflows/run.sh
-          sh ./.github/workflows/run.sh
+          cd .github/workflows/
+          chmod +x run.sh
+          sh run.sh
 
         
         
