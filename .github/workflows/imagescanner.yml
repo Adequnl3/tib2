@@ -39,7 +39,7 @@ jobs:
 
           docker login -u qunl3 -p dckr_pat_4Gf5ly6ElMkeAjDtzxrUJ4jgPPw
           cd ci/imageScan
-          make
+          sudo make
           
           pwd
           ls -al
