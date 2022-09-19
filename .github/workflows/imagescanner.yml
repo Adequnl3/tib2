@@ -10,39 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       - name: Login to DockerHub
-        
+      - name: Login to DockerHub
+       
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
+      
+      
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - shell: bash
         run: |
-           
+          
+          sudo apt update -y
+          sudo apt -y install build-essential
+          sudo apt-get  install gnupg lsb-release make jq curl
+          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - && \
+          echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
+          sudo apt-get update && apt-get install -y docker-ce-cli
+          pwd
           mkdir -p ~/.docker/cli-plugins && \
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
-
           docker scan --login --token dckr_pat_Ai3TrBdB1tBiios0gUu1qK_y-qE
-          
-
-          sudo apt update -y
-          sudo apt -y install build-essential
-          sudo apt-get -y install gnupg lsb-release make jq curl
-
-          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - && \
-          echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
-          sudo apt-get update -y && apt-get install -y docker-ce-cli
-          
-          
           cd ci/imageScan
           docker scan --accept-license --json --group-issues tykio/tyk-identity-broker:v1.2 | tee tyk-identity-broker.json
           docker scan --accept-license --json --group-issues tykio/tyk-gateway:v3.2 | tee tyk-gateway.json
           jq -r '.vulnerabilities | group_by(.packageName)[] | add | [ .packageName, .severity, .severityWithCritical, .version, .isUpgradeable, .isPatchable, .description, .from[0][0], .identifiers.CVE[] ] | @csv' tyk-gateway.json tyk-identity-broker.json | tee unified.csv
+          pwd
           ls -al
           
         
