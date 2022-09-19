@@ -35,7 +35,7 @@ jobs:
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
           cd ci/imageScan
-          docker scan --login --token dckr_pat_Ai3TrBdB1tBiios0gUu1qK_y-qE
+          docker scan --login --token ${{ secrets.DOCKER_PASSWORD }}
 
           docker scan --accept-license --json --group-issues tykio/tyk-gateway:v3.2 | tee tyk-gateway.json
           ls -al
