@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Login to DockerHub
-        if: startsWith(github.ref, 'refs/tags')
+        
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -36,7 +36,7 @@ jobs:
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
           cd ci/imageScan
-          docker scan --accept-license --json --group-issues tykio/tyk-gateway:v3.2 | tee tyk-gateway.json
+          make
           ls -al
 
      
