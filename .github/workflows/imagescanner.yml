@@ -43,6 +43,10 @@ jobs:
           
           pwd
           ls -al
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: scanreport
+          path: ci/imageScan/scanreport/unified.csv
           
         
         
