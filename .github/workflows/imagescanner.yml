@@ -23,20 +23,20 @@ jobs:
           fetch-depth: 1
       - shell: bash
         run: |
-          sudo su -
-          apt update -y
-          apt -y install build-essential
-          apt-get  install gnupg lsb-release make jq curl
-          curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+          
+          sudo apt update -y
+          sudo apt -y install build-essential
+          sudo apt-get  install gnupg lsb-release make jq curl
+          curl -fsSL https://download.docker.com/linux/debian/gpg |sudo apt-key add - && \
           echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
-          apt-get update && apt-get install -y docker-ce-cli
+          sudo apt-get update && apt-get install -y docker-ce-cli
           pwd
           mkdir -p ~/.docker/cli-plugins && \
           curl https://github.com/docker/scan-cli-plugin/releases/latest/download/docker-scan_linux_amd64 -L -s -S -o ~/.docker/cli-plugins/docker-scan &&\
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
           docker login -u qunl3 -p dckr_pat_GteF4uxDAhoLg-BKSTs6SS1oRq4
           cd ci/imageScan
-          make
+          sudo make
           docker scan --accept-license --json --group-issues tykio/tyk-identity-broker:v1.2 | tee tyk-identity-broker.json
           docker scan --accept-license --json --group-issues tykio/tyk-gateway:v3.2 | tee tyk-gateway.json
           jq -r '.vulnerabilities | group_by(.packageName)[] | add | [ .packageName, .severity, .severityWithCritical, .version, .isUpgradeable, .isPatchable, .description, .from[0][0], .identifiers.CVE[] ] | @csv' tyk-gateway.json tyk-identity-broker.json | tee unified.csv
