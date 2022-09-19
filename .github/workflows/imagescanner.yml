@@ -37,7 +37,7 @@ jobs:
 
           pwd
 
-          docker login -u qunl3 -p dckr_pat_GteF4uxDAhoLg-BKSTs6SS1oRq4
+          docker login -u adequnl3 -p dckr_pat_QHfwO_bYJ96tPtzjEB4nR0TxDqE
           cd ci/imageScan
           make
           
@@ -45,6 +45,7 @@ jobs:
           ls -al
           mkdir scanreport
           cp unified.csv scanreport
+          
       - uses: actions/upload-artifact@v3
         with: 
           name: scanreport
