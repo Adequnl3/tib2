@@ -43,13 +43,13 @@ jobs:
           
           pwd
           ls -al
-          mkdir scanreport
-          cp unified.csv scanreport
+      #     mkdir scanreport
+      #     cp unified.csv scanreport
 
-      - uses: actions/upload-artifact@v3
-        with: 
-          name: scanreport
-          path: ci/imageScan/scanreport/unified.csv
+      # - uses: actions/upload-artifact@v3
+      #   with: 
+      #     name: scanreport
+      #     path: ci/imageScan/scanreport/unified.csv
           
         
         
