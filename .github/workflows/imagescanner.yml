@@ -31,7 +31,7 @@ jobs:
 
           cd .github/workflows
         
-          bash run.sh
+          sudo bash run.sh
         
         
       
