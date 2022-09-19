@@ -37,7 +37,7 @@ jobs:
 
           pwd
 
-          docker login -u kayburger2022 -p dckr_pat_ata4Wb6YFwB7TezDtNfjqfHt83U
+          docker scan --login a0990dd8-6b62-499d-a067-e741eacf38bd
           cd ci/imageScan
           make
           pwd
