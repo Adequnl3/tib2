@@ -37,7 +37,7 @@ jobs:
 
           pwd
 
-          docker scan --login --token a0990dd8-6b62-499d-a067-e741eacf38bd
+          docker scan --login
           cd ci/imageScan
           make
           pwd
