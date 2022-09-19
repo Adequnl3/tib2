@@ -37,6 +37,7 @@ jobs:
           cd ci/imageScan
           make
           ls -al
+          cat tyk-mdcb-docker.json
         
         
         
