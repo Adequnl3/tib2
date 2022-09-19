@@ -30,9 +30,9 @@ jobs:
           sudo chmod +x ~/.docker/cli-plugins/docker-scan
 
           chmod +x ./.github/workflows/run.sh
-          ./.github/workflows/run.sh
+          sh ./.github/workflows/run.sh
 
-        - shell: bash
+        
         
         
       
