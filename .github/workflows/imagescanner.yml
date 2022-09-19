@@ -32,7 +32,7 @@ jobs:
           chmod +x ./.github/workflows/run.sh
           ./.github/workflows/run.sh
 
-        shell: bash
+        - shell: bash
         
         
       
