@@ -1,6 +1,8 @@
 name: Scan Docker Image CVE
 
 on: 
+  push:
+  pull_request:
   workflow_dispatch:
     inputs:
       imagetag:
@@ -32,7 +34,11 @@ jobs:
           trivy image --severity HIGH,CRITICAL tykio/tyk-dashboard:v3.2 > tyk-dashboard.json | tee >> unified.json
           trivy image --severity HIGH,CRITICAL tykio/tyk-gateway:v3.2 > tyk-gateway.json | tee >> unified.json
           trivy image --severity HIGH,CRITICAL tykio/tyk-pump-docker-pub:v1.6 > tyk-pump-docker-pub.json | tee >> unified.json
-      
+      - name: Upload Trivy scan results as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivyreport
+          path: ./unified.json
 
 
 
@@ -54,11 +60,11 @@ jobs:
       
       
 
-      # - name: Upload Trivy scan results as artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: trivyreport
-      #     path: ./trivy-results.csv
+      - name: Upload Trivy scan results as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivyreport
+          path: ./trivy-results.csv
           
           
           
