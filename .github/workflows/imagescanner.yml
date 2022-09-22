@@ -35,7 +35,7 @@ jobs:
 
           pwd
           ls -al
-       - name: Upload Trivy scan results as artifact
+      - name: Upload Trivy scan results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: trivyreport
