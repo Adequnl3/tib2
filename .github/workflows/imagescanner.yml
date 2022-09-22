@@ -4,11 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-    inputs:
-      imagetag:
-        description: 'specify image tag'
-        required: true
-        type: string
+    # inputs:
+    #   imagetag:
+    #     description: 'specify image tag'
+    #     required: true
+    #     type: string
       
 
 
@@ -60,11 +60,11 @@ jobs:
       
       
 
-      - name: Upload Trivy scan results as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: trivyreport
-          path: ./trivy-results.csv
+      # - name: Upload Trivy scan results as artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: trivyreport
+      #     path: ./trivy-results.csv
           
           
           
