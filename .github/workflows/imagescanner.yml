@@ -21,7 +21,7 @@ jobs:
       - shell: bash
         run: |
           apt-get update -y
-          apt-get install -y build-essential wget gnupg lsb-release dpkg
+          apt-get install -y  wget gnupg lsb-release
           wget https://github.com/aquasecurity/trivy/releases/download/v0.32.0/trivy_0.32.0_Linux-64bit.deb
           dpkg -i trivy_0.32.0_Linux-64bit.deb
 
@@ -32,9 +32,6 @@ jobs:
           trivy image --severity HIGH,CRITICAL tykio/tyk-dashboard:v3.2 > tyk-dashboard.json | tee >> unified.json
           trivy image --severity HIGH,CRITICAL tykio/tyk-gateway:v3.2 > tyk-gateway.json | tee >> unified.json
           trivy image --severity HIGH,CRITICAL tykio/tyk-pump-docker-pub:v1.6 > tyk-pump-docker-pub.json | tee >> unified.json
-
-          pwd
-          ls -al
       - name: Upload Trivy scan results as artifact
         uses: actions/upload-artifact@v3
         with:
