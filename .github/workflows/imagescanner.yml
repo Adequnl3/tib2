@@ -4,11 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-    # inputs:
-    #   imagetag:
-    #     description: 'specify image tag'
-    #     required: true
-    #     type: string
+    inputs:
+      imagetag:
+        description: 'specify image tag'
+        required: true
+        type: string
       
 
 
@@ -28,12 +28,12 @@ jobs:
           sudo dpkg -i trivy_0.32.0_Linux-64bit.deb
 
           trivy image --severity HIGH,CRITICAL tykio/tyk-identity-broker:v1.2 > tyk-identity-broker.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-mdcb-docker:v1.7 > tyk-mdcb-docker.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-hybrid-docker:v3.2 > tyk-hybrid-docker.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-plugin-compiler:v3.2 > tyk-plugin-compiler.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-dashboard:v3.2 > tyk-dashboard.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-gateway:v3.2 > tyk-gateway.json | tee >> unified.json
-          trivy image --severity HIGH,CRITICAL tykio/tyk-pump-docker-pub:v1.6 > tyk-pump-docker-pub.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-mdcb-docker:v1.7 > tyk-mdcb-docker.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-hybrid-docker:v3.2 > tyk-hybrid-docker.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-plugin-compiler:v3.2 > tyk-plugin-compiler.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-dashboard:v3.2 > tyk-dashboard.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-gateway:v3.2 > tyk-gateway.json | tee >> unified.json
+      #     trivy image --severity HIGH,CRITICAL tykio/tyk-pump-docker-pub:v1.6 > tyk-pump-docker-pub.json | tee >> unified.json
       - name: Upload Trivy scan results as artifact
         uses: actions/upload-artifact@v3
         with:
