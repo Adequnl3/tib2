@@ -22,10 +22,10 @@ jobs:
           fetch-depth: 1
       - shell: bash
         run: |
-          apt-get update -y
-          apt-get install -y  wget gnupg lsb-release
+          sudo apt-get update -y
+          sudo apt-get install -y  wget gnupg lsb-release
           wget https://github.com/aquasecurity/trivy/releases/download/v0.32.0/trivy_0.32.0_Linux-64bit.deb
-          dpkg -i trivy_0.32.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.32.0_Linux-64bit.deb
 
           trivy image --severity HIGH,CRITICAL tykio/tyk-identity-broker:v1.2 > tyk-identity-broker.json | tee >> unified.json
           trivy image --severity HIGH,CRITICAL tykio/tyk-mdcb-docker:v1.7 > tyk-mdcb-docker.json | tee >> unified.json
