@@ -1,7 +1,6 @@
 name: Scan Docker Image CVE
 
 on: 
-  
   workflow_dispatch:
     inputs:
       image:
