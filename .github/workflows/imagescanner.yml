@@ -1,16 +1,13 @@
 name: Scan Docker Image CVE
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       image:
         description: 'specify image tag'
         required: true
         type: string
-      
 
-
-    
 jobs:
   scan:
     runs-on: ubuntu-22.04
@@ -22,141 +19,5 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          
           image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
           trivy-config: trivy.yaml
-
-     
-
-      # - shell: bash
-      #   run: |
-      #     apt-get update -y
-      #     apt-get install -y  wget gnupg lsb-release
-      #     wget https://github.com/aquasecurity/trivy/releases/download/v0.32.0/trivy_0.32.0_Linux-64bit.deb
-      #     dpkg -i trivy_0.32.0_Linux-64bit.deb
-
-      #     trivy image --severity HIGH,CRITICAL tykio/tyk-identity-broker:v1.2 > tyk-identity-broker.json | tee >> unified.json
-      #     ls -al
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-mdcb-docker:v1.7 > tyk-mdcb-docker.json | tee >> unified.json
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-hybrid-docker:v3.2 > tyk-hybrid-docker.json | tee >> unified.json
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-plugin-compiler:v3.2 > tyk-plugin-compiler.json | tee >> unified.json
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-dashboard:v3.2 > tyk-dashboard.json | tee >> unified.json
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-gateway:v3.2 > tyk-gateway.json | tee >> unified.json
-      # #     trivy image --severity HIGH,CRITICAL tykio/tyk-pump-docker-pub:v1.6 > tyk-pump-docker-pub.json | tee >> unified.json
-      # - name: Upload Trivy scan results as artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: trivyreport
-      #     path: ./trivy-results
-
-
-
-
-
-      
-
-      
-     
-  # 
-
-      
-      
-
-      # - name: Upload Trivy scan results as artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: trivyreport
-      #     path: ./trivy-results.csv
-          
-          
-          
-          
-          
-          
-          
-          
-  # cat trivy-results.json | jq -r '.Results[] | (.Vulnerabilities, .Severity, .Library, .Title, .InstalledVersion, .FixedVersion)'
-
-          
-          
-          
-          
-          
-          
-
-
-
-      
-     
-     
-
-          
-
-      
-
-
-
-   
-        
-        
-        
-      
-          
-
-
-      
-          
-                
-  #         make
-  #         mkdir scanreport
-          
-  #         cp unified.csv scanreport
-
-  #     - uses: actions/upload-artifact@v3
-  #       with: 
-  #         name: scanreport
-  #         path: ci/imageScan/scanreport/unified.csv
-     
-        
-          
-          
-            
-         
-     
-          
-          
-      
-
-          
-
-
-      
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
