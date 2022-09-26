@@ -26,7 +26,7 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
     
-      - name: Scan
+      - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
@@ -36,12 +36,53 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
 
+      - name: Scan dashboard
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-dashboard.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Scan mdcb
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-mdcb-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Scan hybrid docker
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-hybrid-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Scan pump
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-pump-docker-pub.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
       - name: Combine reports
         shell: bash
         run: |
-          cat tyk-identity-broker.json tyk-gateway.json > trivy-results.json
+          sudo apt update -y
+          sudo apt-get install jq
+          cat tyk-identity-broker.json tyk-gateway.json tyk-dashboard.json tyk-mdcb-docker.json tyk-hybrid-docker.json tyk-pump-docker-pub.json > trivy-results.json
           ls -al
-          pwd
 
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@v3
