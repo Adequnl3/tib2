@@ -1,6 +1,7 @@
 name: Scan Docker Image CVE
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       image:
@@ -10,14 +11,53 @@ on:
 
 jobs:
   scan:
-    runs-on: ubuntu-22.04
-    steps:      
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+    
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
-          trivy-config: trivy.yaml
+          format: 'json'
+          output: 'tyk-identity-broker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+    
+      - name: Scan
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-gateway.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Combine reports
+        shell: bash
+        run: |
+          cat tyk-identity-broker.json tyk-gateway.json > trivy-results.json
+          ls -al
+          pwd
+
+      - name: 'Send mail'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: kaytest2022@gmail.com
+          password: ipdizxhdrdfyozsf
+          subject: Dockerfile Scan Result
+          to: adequnl3@gmail.com
+          from: kaytest2022@gmail.com
+          body: Please check scan result
+          attachments: ./trivy-results.json
+
+
+          
+
+
