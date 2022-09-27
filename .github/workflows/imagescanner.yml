@@ -28,8 +28,8 @@ jobs:
           skip-update: 'true'
       - shell: bash
         run: |
-          apt update -y
-          apt-get install -y jq
+          sudo apt update -y
+          sudo apt-get install -y jq
           cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-identity-broker.csv
           ls -al
 
