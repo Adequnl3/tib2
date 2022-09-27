@@ -4,7 +4,7 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      image:
+      imagetag:
         description: 'specify image tag'
         required: true
         type: string
@@ -25,16 +25,13 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-    
-      - name: Scan gateway
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-gateway.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
+          skip-update: 'true'
+      - shell: bash
+        run: |
+          apt update -y
+          apt-get install -y jq
+          cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-identity-broker.csv
+          ls -al
 
       - name: Scan dashboard
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -45,6 +42,11 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+          skip-update: 'true'
+      - shell: bash
+        run: |
+          cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-dashboard.csv
+          ls -al
 
       - name: Scan mdcb
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -55,16 +57,11 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-
-      - name: Scan hybrid docker
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-hybrid-docker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
+          skip-update: 'true'
+      - shell: bash
+        run: |
+          cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-mdcb-docker.csv
+          ls -al
 
       - name: Scan pump
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -75,13 +72,51 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+          skip-update: 'true'
+      - shell: bash
+        run: |
+          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
+          ls -al
+
+      - name: Scan gateway
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-gateway.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+          skip-update: 'true'
+
+      - name: Scan hybrid docker
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-hybrid-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+          skip-update: 'true'
+      
+
+      - name: Scan tyk-plugin-compiler
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-plugin-compiler:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-plugin-compiler.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+          skip-update: 'true'
+
 
       - name: Combine reports
         shell: bash
         run: |
-          sudo apt update -y
-          sudo apt-get install jq
-          cat tyk-identity-broker.json tyk-gateway.json tyk-dashboard.json tyk-mdcb-docker.json tyk-hybrid-docker.json tyk-pump-docker-pub.json > trivy-results.json
+          cat tyk-dashboard.csv tyk-mdcb-docker.csv tyk-pump-docker-pub.csv > trivy-results.csv
           ls -al
 
       - name: 'Send mail'
@@ -96,7 +131,7 @@ jobs:
           to: adequnl3@gmail.com
           from: kaytest2022@gmail.com
           body: Please check scan result
-          attachments: ./trivy-results.json
+          attachments: ./trivy-results.csv
 
 
           
