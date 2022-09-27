@@ -103,10 +103,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '10m0s'
-      - shell: bash
-        run: |
-          cat tyk-plugin-compiler.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-plugin-compiler.csv
-          ls -al
 
       - name: 'Send mail'
         uses: dawidd6/action-send-mail@v3
