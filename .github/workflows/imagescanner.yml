@@ -83,6 +83,10 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+     - shell: bash
+        run: |
+          cat tyk-gateway.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-gateway.csv
+          ls -al
 
       - name: Scan hybrid docker
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -93,6 +97,10 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-hybrid-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-hybrid-docker.csv
+          ls -al
       
 
       - name: Scan tyk-plugin-compiler
@@ -103,14 +111,10 @@ jobs:
           output: 'tyk-plugin-compiler.json'
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-          skip-update: 'true'
-
-
-      - name: Combine reports
-        shell: bash
+          timeout: '10m0s'
+      - shell: bash
         run: |
-          cat tyk-dashboard.csv tyk-mdcb-docker.csv tyk-pump-docker-pub.csv > trivy-results.csv
+          cat tyk-plugin-compiler.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-plugin-compiler.csv
           ls -al
 
       - name: 'Send mail'
@@ -125,7 +129,7 @@ jobs:
           to: adequnl3@gmail.com
           from: kaytest2022@gmail.com
           body: Please check scan result
-          attachments: ./trivy-results.csv
+          attachments: ./tyk-identity-broker.csv
 
 
           
