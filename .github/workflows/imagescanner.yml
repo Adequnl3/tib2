@@ -85,8 +85,8 @@ jobs:
           timeout: '5m0s'
       - shell: bash
         run: |
-          cat tyk-gateway.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-gateway.csv
           ls -al
+          cat tyk-gateway.json
 
       - name: Scan hybrid docker
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -99,7 +99,7 @@ jobs:
           timeout: '5m0s'
       - shell: bash
         run: |
-          cat tyk-hybrid-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-hybrid-docker.csv
+          cat tyk-hybrid-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.VulnerabilityID, .Severity, .InstalledVersion] | @csv' >> tyk-hybrid-docker.csv
           ls -al
       
 
