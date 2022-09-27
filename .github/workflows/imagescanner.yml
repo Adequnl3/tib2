@@ -25,7 +25,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
       - shell: bash
         run: |
           sudo apt update -y
@@ -42,7 +41,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
       - shell: bash
         run: |
           cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-dashboard.csv
@@ -57,7 +55,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
       - shell: bash
         run: |
           cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-mdcb-docker.csv
@@ -72,7 +69,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
       - shell: bash
         run: |
           cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
@@ -87,7 +83,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
 
       - name: Scan hybrid docker
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -98,13 +93,12 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          skip-update: 'true'
       
 
       - name: Scan tyk-plugin-compiler
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-plugin-compiler:${{inputs.imagetag}}'
+          image-ref: 'tykio/tyk-plugin-compiler:v4.0'
           format: 'json'
           output: 'tyk-plugin-compiler.json'
           severity: 'CRITICAL,HIGH'
