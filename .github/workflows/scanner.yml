@@ -1,0 +1,143 @@
+name: Scan Docker Image CVE
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      imagetag:
+        description: 'specify image tag'
+        required: true
+        type: string
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+    
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-identity-broker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          sudo apt update -y
+          sudo apt-get install -y jq
+          cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-identity-broker.csv
+          ls -al
+
+      - name: Scan dashboard
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-dashboard.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-dashboard.csv
+          ls -al
+
+      - name: Scan mdcb
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-mdcb-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-mdcb-docker.csv
+          ls -al
+
+      - name: Scan pump
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-pump-docker-pub.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
+          ls -al
+
+      - name: Scan gateway
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-gateway.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Scan hybrid docker
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-hybrid-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+
+      - name: Scan tyk-plugin-compiler
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-plugin-compiler:v4.0'
+          format: 'json'
+          output: 'tyk-plugin-compiler.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '10m0s'
+
+      - name: 'update_worksheet'
+        uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
+        with:
+          spreadsheetId: ScanReport
+          commands: | # list of commands, specified as a valid JSON string
+            [
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tib" }},
+              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
+              { "command": "getData", "args": { "range": "'tib'!A2:B3" } }
+            ]
+            
+            [
+              { "command": "addWorksheet", "args": { "worksheetTitle": "mdcb" }},
+              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
+              { "command": "getData", "args": { "range": "'mdcb'!A2:B3" } }
+            ]
+            
+            [
+              { "command": "addWorksheet", "args": { "worksheetTitle": "pump" }},
+              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
+              { "command": "getData", "args": { "range": "'pump'!A2:B3" } }
+            ]
+            
+            [
+              { "command": "addWorksheet", "args": { "worksheetTitle": "dashboard" }},
+              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
+              { "command": "getData", "args": { "range": "'dashboard'!A2:B3" } }
+            ]
+            
+        env:
+          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
+          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+      - name: dump results
+        env:
+          #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
+          RESULTS: ${{ steps.update_worksheet.outputs.results }}
+        run: echo "$RESULTS" | jq
