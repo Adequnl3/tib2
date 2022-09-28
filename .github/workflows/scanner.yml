@@ -15,64 +15,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-    
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-identity-broker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          sudo apt update -y
-          sudo apt-get install -y jq
-          cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-identity-broker.csv
-          ls -al
-
-      - name: Scan dashboard
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-dashboard.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-dashboard.csv
-          ls -al
-
-      - name: Scan mdcb
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-mdcb-docker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-mdcb-docker.csv
-          ls -al
-
-      - name: Scan pump
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-pump-docker-pub.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
-          ls -al
 
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -110,27 +52,21 @@ jobs:
           spreadsheetId: ScanReport
           commands: | # list of commands, specified as a valid JSON string
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tib" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'tib'!A2:B3" } }
+              { "command": "getData", "args": { "range": "'tyk'!A2:B3" } }
             ]
             
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "mdcb" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "hybrid" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'mdcb'!A2:B3" } }
+              { "command": "getData", "args": { "range": "'hybrid'!A2:B3" } }
             ]
             
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "pump" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "compiler" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'pump'!A2:B3" } }
-            ]
-            
-            [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "dashboard" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'dashboard'!A2:B3" } }
+              { "command": "getData", "args": { "range": "'compiler'!A2:B3" } }
             ]
             
         env:
