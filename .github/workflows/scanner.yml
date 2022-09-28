@@ -53,20 +53,8 @@ jobs:
           commands: | # list of commands, specified as a valid JSON string
             [
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
+              { "command": "updateData", "args": { "data": ["Results", "Vulnerabilities", "Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
               { "command": "getData", "args": { "range": "'tyk'!A2:B3" } }
-            ]
-            
-            [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "hybrid" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'hybrid'!A2:B3" } }
-            ]
-            
-            [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "compiler" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'compiler'!A2:B3" } }
             ]
             
         env:
