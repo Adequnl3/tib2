@@ -26,35 +26,15 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
 
-      - name: Scan hybrid docker
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-hybrid-docker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-
-      - name: Scan tyk-plugin-compiler
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-plugin-compiler:v4.0'
-          format: 'json'
-          output: 'tyk-plugin-compiler.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '10m0s'
-
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         with:
-          spreadsheetId: <spreadsheetId>
           commands: | # list of commands, specified as a valid JSON string
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "<worksheetTitle>" }},
+              { "command": "addSpreadsheet", "args": { "spreadsheetTitle": "Scan_report" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'<worksheetTitle>'!A2:B3" } }
+              { "command": "getData", "args": { "range": "'tyk'!A2:B3" }}
             ]
             
         env:
