@@ -46,7 +46,7 @@ jobs:
             [
               { "command": "addWorksheet", "args": { "worksheetTitle": "mdcb" }},
               { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
-              { "command": "getData", "args": { "range": " 'mdcb' $scanreport " }}
+              { "command": "getData", "args": { "range": " 'mdcb' !A2:B3" }}
               
             ]
             
