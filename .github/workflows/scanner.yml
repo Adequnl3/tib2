@@ -25,6 +25,11 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> tyk.json
+          export scanreport=tyk.json
+          echo "::set-output name=scanreport::$scanreport"
 
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
@@ -33,7 +38,7 @@ jobs:
           commands: | # list of commands, specified as a valid JSON string
             [
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }}
+              { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }}
             ]
             
         env:
