@@ -47,7 +47,7 @@ jobs:
           RESULTS: ${{ steps.create_worksheet.outputs.results }}
         shell: bash
         run: |
-          echo "$RESULTS" | jq >> tyk.xlsx
-          cat tyk.xlsx
+          echo "$RESULTS" | jq
+          cat Scan_report
           pwd
           ls -al
