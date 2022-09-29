@@ -47,10 +47,6 @@ jobs:
           RESULTS: ${{ steps.update_worksheet.outputs.results }}
         run: |
           echo "$RESULTS" | jq
+          cat RESULTS
           pwd
           ls -al
-        
-      - uses: actions/upload-artifact@v3
-        with: 
-          name: scanreport
-          path: ./RESULTS
