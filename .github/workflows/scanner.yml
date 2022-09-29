@@ -29,10 +29,9 @@ jobs:
       - name: 'create_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         with:
-          spreadsheetId: sheet1
+          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [
-              { "command": "addSpreadsheet", "args": { "spreadsheetTitle": "Scan_report" }},
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
               { "command": "getData", "args": { "range": "'tyk'!A2:B3" }}
@@ -48,6 +47,3 @@ jobs:
         shell: bash
         run: |
           echo "$RESULTS" | jq
-          cat Scan_report
-          pwd
-          ls -al
