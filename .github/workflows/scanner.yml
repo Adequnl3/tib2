@@ -29,7 +29,14 @@ jobs:
         run: |
           cat tyk-identity-broker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> tib.json
           export scanreport=tib.json
-          echo "::set-output name=scanreport::$scanreport"
+          
+      - name: Set output
+        run: echo '::set-output name=scanreport::$scanreport'
+        id: report-generator
+        
+      - name: Get output
+        run: echo "${{ steps.report-generator.outputs.scanreport }}"
+          
 
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
@@ -44,3 +51,5 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+      
+
