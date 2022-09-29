@@ -26,7 +26,7 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
 
-      - name: 'update_worksheet'
+      - name: 'create_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         with:
           spreadsheetId: sheet1
@@ -43,10 +43,11 @@ jobs:
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
       - name: dump results
         env:
-          #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
-          RESULTS: ${{ steps.update_worksheet.outputs.results }}
+          #  the output of the action can be found in ${{ steps.create_worksheet.outputs.results }}
+          RESULTS: ${{ steps.create_worksheet.outputs.results }}
+        shell: bash
         run: |
-          echo "$RESULTS" | jq
-          cat RESULTS
+          echo "$RESULTS" | jq >> tyk.xlsx
+          cat tyk.xlsx
           pwd
           ls -al
