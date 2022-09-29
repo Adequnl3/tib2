@@ -30,6 +30,7 @@ jobs:
           cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> tib.json
           export scanreport=tib.json
           echo "::set-output name=scanreport::$scanreport"
+          shell: /bin/bash -e {0}
 
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
