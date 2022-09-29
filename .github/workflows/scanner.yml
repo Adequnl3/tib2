@@ -19,16 +19,16 @@ jobs:
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
+          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
           format: 'json'
-          output: 'tyk-mdcb-docker.json'
+          output: 'tyk-pump-docker-pub.json'
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
       - shell: bash
         run: |
-          cat tyk-mdcb-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> mdcb.json
-          export scanreport=mdcb.json
+          cat tyk-pump-docker-pub.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> pump.json
+          export scanreport=pump.json
           
       - name: Set output
         run: echo '::set-output name=scanreport::$scanreport'
@@ -43,9 +43,10 @@ jobs:
         with:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
-            [
+            [ 
+              { "command": "addWorksheet", "args": { "worksheetTitle": "pump" }},
               { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
-              { "command": "getData", "args": { "range": " 'mdcb' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'pump' !A2:B3" }}              
             ]
             
         env:
