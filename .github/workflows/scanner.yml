@@ -26,24 +26,16 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
 
-      - name: 'create_worksheet'
+      - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         with:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk" }},
-              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-              { "command": "getData", "args": { "range": "'tyk'!A2:B3" }}
+              { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }}
             ]
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-      - name: dump results
-        env:
-          #  the output of the action can be found in ${{ steps.create_worksheet.outputs.results }}
-          RESULTS: ${{ steps.create_worksheet.outputs.results }}
-        shell: bash
-        run: |
-          echo "$RESULTS" | jq
