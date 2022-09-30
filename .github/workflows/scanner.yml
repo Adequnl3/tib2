@@ -11,8 +11,6 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
         
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -29,7 +27,6 @@ jobs:
         run: |
           scan_report=$(cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
-          echo $scan_report
           
 
       - name: 'update_worksheet'
@@ -38,9 +35,9 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "getWorksheet", "args": { "worksheetTitle": "tykpump2" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-pump-docker-pub" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tykpump2' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'tyk-pump-docker-pub' !A2:B3" }}              
             ]
             
         env:
