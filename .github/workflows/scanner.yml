@@ -66,6 +66,7 @@ jobs:
           spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
             [ 
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-plugin-compiler" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator3.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-plugin-compiler' !A2:B3" }}              
             ]
