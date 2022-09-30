@@ -35,9 +35,10 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-pump-docker-pub" }},
+              { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "test" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-pump-docker-pub' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'test' !A2:B3" }}              
             ]
             
         env:
