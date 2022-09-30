@@ -38,7 +38,7 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tykpump2" }},
+              { "command": "getWorksheet", "args": { "worksheetTitle": "tykpump2" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tykpump2' !A2:B3" }}              
             ]
