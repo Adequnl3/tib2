@@ -46,7 +46,7 @@ jobs:
             [ 
               { "command": "addWorksheet", "args": { "worksheetTitle": "tykpump" }},
               { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
-              { "command": "getData", "args": { "range": " 'pump' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'tykpump' !A2:B3" }}              
             ]
             
         env:
