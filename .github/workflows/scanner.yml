@@ -27,8 +27,8 @@ jobs:
           timeout: '5m0s'
       - shell: bash
         run: |
-          cat tyk-pump-docker-pub.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> pump.json
-          export scanreport=pump.json
+          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
+          export scanreport=tyk-pump-docker-pub.csv
           
       - name: Set output
         run: echo '::set-output name=scanreport::$scanreport'
@@ -44,7 +44,7 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "pump" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tykpump" }},
               { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
               { "command": "getData", "args": { "range": " 'pump' !A2:B3" }}              
             ]
