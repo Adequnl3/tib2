@@ -38,7 +38,6 @@ jobs:
             [ 
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-hybrid-docker" }},
               { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }}
-              { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-hybrid-docker' !A2:B3" }}              
             ]
             
