@@ -1,5 +1,4 @@
 name: Scan Docker Image CVE
-
 on:
   push:
   workflow_dispatch:
@@ -8,14 +7,13 @@ on:
         description: 'specify image tag'
         required: true
         type: string
-
 jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+        
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
@@ -25,17 +23,12 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+
       - shell: bash
-        run: |
-          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion] | @csv' >> tyk-pump-docker-pub.csv
-          export scanreport=tyk-pump-docker-pub.csv
-          
-      - name: Set output
-        run: echo '::set-output name=scanreport::$scanreport'
         id: report-generator
-        
-      - name: Get output
-        run: echo "${{ steps.report-generator.outputs.scanreport }}"
+        run: |
+          scan_report=$(cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -s)
+          echo "::set-output name=scanreport::$scan_report"
           
 
       - name: 'update_worksheet'
@@ -45,12 +38,25 @@ jobs:
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "addWorksheet", "args": { "worksheetTitle": "tykpump2" }},
-              { "command": "updateData", "args": { "data": [["Description", "VulnerabilityID", "Severity", "PkgName", "InstalledVersion", "FixedVersion"]] }},
+              { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tykpump2' !A2:B3" }}              
             ]
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
