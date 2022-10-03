@@ -102,23 +102,5 @@ jobs:
         run: |
           cat tyk-hybrid-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
           ls -al
-      
-
-      - name: Scan tyk-plugin-compiler
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-plugin-compiler:v4.0.6'
-          format: 'json'
-          output: 'tyk-plugin-compiler.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '10m0s'
-      - shell: bash
-        run: |
-          cat tyk-plugin-compiler.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json 
-          ls -al
-          scan_report=$(cat unified.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           cat scan_report
-          
-
-
