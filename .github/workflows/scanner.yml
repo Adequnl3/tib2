@@ -1,5 +1,4 @@
 name: Scan Docker Image CVE
-
 on:
   push:
   workflow_dispatch:
@@ -8,42 +7,39 @@ on:
         description: 'specify image tag'
         required: true
         type: string
-
 jobs:
   scan:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
-    
-      - name: Run Trivy vulnerability scanner
+        
+      - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
+          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
           format: 'json'
-          output: 'tyk-identity-broker.json'
+          output: 'tyk-dashboard.json'
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
+
       - shell: bash
         id: report-generator
         run: |
-          sudo apt update -y
-          sudo apt-get install -y jq
-          scan_report=$(cat tyk-identity-broker.json | jq -r '.Results[]? | .Vulnerabilities[]? | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
-          ls -al
+          scan_report=$(cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
-            [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "identity" }},
-              { "command": "updateData", "args": { "data": ${{steps.report-generator.outputs.scanreport}} }}
-              { "command": "getData", "args": { "range": " 'identity' !A2:B3" }} 
+            [ 
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-dashboard" }},
+              { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
+              { "command": "getData", "args": { "range": " 'tyk-dashboard' !A2:B3" }}              
             ]
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }} 
-
+          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
