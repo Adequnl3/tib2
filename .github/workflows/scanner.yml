@@ -24,102 +24,12 @@ jobs:
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
       - shell: bash
+        id: report-generator
         run: |
           sudo apt update -y
           sudo apt-get install -y jq
-          cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          scan_report=$(cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           ls -al
-
-      - name: Scan dashboard
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-dashboard.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-
-      - name: Scan mdcb
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-mdcb-docker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-
-      - name: Scan pump
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-pump-docker-pub.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-
-      - name: Scan gateway
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-gateway.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-      
-
-      - name: Scan hybrid docker
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-hybrid-docker:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-hybrid-docker.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-      - shell: bash
-        run: |
-          cat tyk-hybrid-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-          
-      - name: Scan tyk-plugin-compiler
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'tykio/tyk-plugin-compiler:v4.0.6'
-          format: 'json'
-          output: 'tyk-plugin-compiler.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '10m0s'
-      - shell: bash
-        run: |
-          cat tyk-plugin-compiler.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          ls -al
-          
-      - name: Set output and ENV
-        shell: bash
-        id: report-generator
-        run: |
-          scan_report=$(cat tyk-dashboard.json | jq -r '.Results[]? | .Vulnerabilities[]? | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
       - name: 'update_worksheet'
@@ -128,9 +38,9 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "dashboard" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "identity" }},
               { "command": "updateData", "args": { "data": ${{steps.report-generator.outputs.scanreport}} }}
-              { "command": "getData", "args": { "range": " 'dashboard' !A2:B3" }} 
+              { "command": "getData", "args": { "range": " 'identity' !A2:B3" }} 
             ]
             
         env:
