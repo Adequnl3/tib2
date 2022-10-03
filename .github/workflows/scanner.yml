@@ -12,8 +12,67 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+    
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-identity-broker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-identity-broker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          sudo apt update -y
+          sudo apt-get install -y jq
+          cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
+
+      - name: Scan dashboard
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-dashboard.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
+
+      - name: Scan mdcb
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-mdcb-docker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
+
+      - name: Scan pump
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
+          format: 'json'
+          output: 'tyk-pump-docker-pub.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        run: |
+          cat tyk-pump-docker-pub.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
 
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -24,27 +83,11 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          
       - shell: bash
-        id: report-generator
         run: |
-          scan_report=$(cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
-          echo "::set-output name=scanreport::$scan_report"
-          
-      - name: 'update_worksheet'
-        uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
-        with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
-          commands: | # list of commands, specified as a valid JSON string
-            [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-gateway" }},
-              { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-gateway' !A2:B3" }}              
-            ]
-            
-        env:
-          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+          cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
+      
 
       - name: Scan hybrid docker
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
@@ -55,54 +98,27 @@ jobs:
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '5m0s'
-          
       - shell: bash
-        id: report-generator2
         run: |
-          scan_report=$(cat tyk-hybrid-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
-          echo "::set-output name=scanreport::$scan_report"
-          
-      - name: 'update_worksheet'
-        uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
-        with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
-          commands: | # list of commands, specified as a valid JSON string
-            [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-hybrid-docker" }},
-              { "command": "updateData", "args": { "data": ${{ steps.report-generator2.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-hybrid-docker' !A2:B3" }}              
-            ]
-            
-        env:
-          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+          cat tyk-hybrid-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
+          ls -al
+      
 
       - name: Scan tyk-plugin-compiler
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-plugin-compiler:v4.0'
+          image-ref: 'tykio/tyk-plugin-compiler:v4.0.6'
           format: 'json'
           output: 'tyk-plugin-compiler.json'
           severity: 'CRITICAL,HIGH'
           security-checks: 'vuln,secret,config'
           timeout: '10m0s'
-          
       - shell: bash
-        id: report-generator3
         run: |
-          scan_report=$(cat tyk-plugin-compiler.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
-          echo "::set-output name=scanreport::$scan_report"
-      - name: 'update_worksheet'
-        uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
-        with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
-          commands: | # list of commands, specified as a valid JSON string
-            [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-plugin-compiler" }},
-              { "command": "updateData", "args": { "data": ${{ steps.report-generator3.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-plugin-compiler' !A2:B3" }}              
-            ]
-            
-        env:
-          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+          cat tyk-plugin-compiler.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json 
+          ls -al
+          scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          cat scan_report
+          
+
+
