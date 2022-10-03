@@ -121,7 +121,7 @@ jobs:
         shell: bash
         id: report-generator
         run: |
-          scan_report=$(cat unified.json | jq -r '.[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          scan_report=$(cat unified.json | jq -r '.[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
       - name: 'update_worksheet'
