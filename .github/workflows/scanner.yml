@@ -32,13 +32,14 @@ jobs:
           
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
+        continue-on-error: true
         with:
           spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-hybrid-docker" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "TykHybridDocker" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-hybrid-docker' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'TykHybridDocker' !A2:B3" }}              
             ]
             
         env:
@@ -63,6 +64,7 @@ jobs:
           
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
+        continue-on-error: true
         with:
           spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
@@ -71,7 +73,6 @@ jobs:
               { "command": "updateData", "args": { "data": ${{ steps.report-maker.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-plugin-compiler' !A2:B3" }}              
             ]
-        continue-on-error: true
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
