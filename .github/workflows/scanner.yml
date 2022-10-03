@@ -102,5 +102,4 @@ jobs:
         run: |
           cat tyk-hybrid-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
           ls -al
-          scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
-          cat scan_report
+          cat unified.json
