@@ -71,6 +71,7 @@ jobs:
               { "command": "updateData", "args": { "data": ${{ steps.report-maker.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-plugin-compiler' !A2:B3" }}              
             ]
+        continue-on-error: true
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
