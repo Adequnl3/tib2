@@ -1,3 +1,4 @@
+
 name: Scan Docker Image CVE
 
 on:
@@ -12,6 +13,7 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
 
       - name: Scan hybrid docker
@@ -36,19 +38,18 @@ jobs:
           spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "TykHybridDocker" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-hybrid-docker" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'TykHybridDocker' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'tyk-hybrid-docker' !A2:B3" }}              
             ]
             
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-        continue-on-error: true
-          
-      - name: Scan tyk-plugin-compiler
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
+        
+      -  name: Scan tyk-plugin-compiler
+         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+         with:
           image-ref: 'tykio/tyk-plugin-compiler:${{inputs.imagetag}}'
           format: 'json'
           output: 'tyk-plugin-compiler.json'
@@ -76,4 +77,3 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-      continue-on-error: true
