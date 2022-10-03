@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo apt update -y
           sudo apt-get install -y jq
-          scan_report=$(cat tyk-dashboard.json | jq -r '.Results[] | .Vulnerabilities[] | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          scan_report=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           ls -al
           echo "::set-output name=scanreport::$scan_report"
           
