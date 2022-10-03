@@ -27,6 +27,7 @@ jobs:
         id: report-generator
         run: |
           scan_report=$(cat tyk-dashboard.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          cat scan_report
           echo "::set-output name=scanreport::$scan_report"
           
 
