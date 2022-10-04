@@ -1,6 +1,6 @@
+
 name: Scan Docker Image CVE
 on:
-  push:
   workflow_dispatch:
     inputs:
       imagetag:
@@ -16,21 +16,6 @@ jobs:
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
-          format: 'json'
-          output: 'tyk-gateway.json'
-          severity: 'CRITICAL,HIGH'
-          security-checks: 'vuln,secret,config'
-          timeout: '5m0s'
-
-      - shell: bash
-        id: report-generator
-        run: |
-          cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          
-      - name: Scan mdcb
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
           image-ref: 'tykio/tyk-mdcb-docker:${{inputs.imagetag}}'
           format: 'json'
           output: 'tyk-mdcb-docker.json'
@@ -39,10 +24,9 @@ jobs:
           timeout: '5m0s'
 
       - shell: bash
-        id: report-generator-2
+        id: report-generator
         run: |
-          cat tyk-mdcb-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' >> unified.json
-          scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          scan_report=$(cat tyk-mdcb-docker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
       - name: 'update_worksheet'
@@ -51,9 +35,9 @@ jobs:
           spreadsheetId: 1tymoz9lVEW57Xhahfevf6IGm_v9nX5_JVJKxaXPQdlE
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "addWorksheet", "args": { "worksheetTitle": "unified" }},
-              { "command": "updateData", "args": { "data": ${{ steps.report-generator-2.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'unified' !A2:B3" }}              
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-mdcb-docker" }},
+              { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
+              { "command": "getData", "args": { "range": " 'tyk-mdcb-docker' !A2:B3" }}              
             ]
             
         env:
