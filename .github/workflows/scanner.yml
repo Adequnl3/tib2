@@ -26,8 +26,8 @@ jobs:
       - shell: bash
         id: report-generator
         run: |
-          gatewayreport=$(cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? | [[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]]' | jq -s)
-          echo "::set-output name=scanreport::$gatewayreport"
+          gateway_report=$(cat tyk-gateway.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          echo "::set-output name=scanreport::$gateway_report"
           
       - name: 'update_worksheet'
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
