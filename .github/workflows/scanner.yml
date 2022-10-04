@@ -26,7 +26,7 @@ jobs:
       - shell: bash
         id: report-generator
         run: |
-          gatewayreport=$(echo tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]')
+          gatewayreport=$(cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -s)
           echo "::set-output name=scanreport::$gatewayreport"
           
       - name: 'update_worksheet'
@@ -58,7 +58,7 @@ jobs:
       - shell: bash
         id: report-generator-2
         run: |
-          mdcbreport=$(echo tyk-mdcb-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]')
+          mdcbreport=$(cat tyk-mdcb-docker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$mdcbreport"
           
       - name: 'update_worksheet'
