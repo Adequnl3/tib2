@@ -26,7 +26,7 @@ jobs:
       - shell: bash
         id: report-generator
         run: |
-          gatewayreport=$(cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? | [.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -s)
+          gatewayreport=$(cat tyk-gateway.json | jq -r '.Results[]? | .Vulnerabilities[]? | [[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]]' | jq -s)
           echo "::set-output name=scanreport::$gatewayreport"
           
       - name: 'update_worksheet'
