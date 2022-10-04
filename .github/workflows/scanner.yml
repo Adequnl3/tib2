@@ -27,7 +27,7 @@ jobs:
       - shell: bash
         id: report-generator
         run: |
-          tyk-pump-docker-pub.json | tee unified.json
+          echo tyk-pump-docker-pub.json >> unified.json
           scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
@@ -59,7 +59,7 @@ jobs:
       - shell: bash
         id: report-generator-2
         run: |
-          tyk-gateway.json | tee unified.json
+          echo tyk-gateway.json >> unified.json
           scan_report=$(cat unified.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$scan_report"
           
