@@ -32,13 +32,13 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-gateway" }},
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-gateway" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
-              { "command": "getData", "args": { "range": " 'tyk-gateway.' !A2:B3" }}              
+              { "command": "getData", "args": { "range": " 'tyk-gateway' !A2:B3" }}              
             ]
             
         env:
@@ -66,7 +66,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-mdcb-docker" }},
@@ -100,7 +100,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-hybrid-docker" }},
@@ -133,7 +133,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-plugin-compiler" }},
@@ -165,7 +165,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-pump-docker-pub" }},
@@ -198,7 +198,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-dashboard" }},
@@ -231,7 +231,7 @@ jobs:
         uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
         continue-on-error: true
         with:
-          spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-identity-broker" }},
