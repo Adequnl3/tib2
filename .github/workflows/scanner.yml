@@ -234,6 +234,7 @@ jobs:
           spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
           commands: | # list of commands, specified as a valid JSON string
             [ 
+              { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-identity-broker" }},
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-identity-broker" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator-7.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-identity-broker' !A2:B3" }}              
