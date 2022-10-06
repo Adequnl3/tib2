@@ -20,9 +20,6 @@ on:
       - scan_report
     tags:
       - 'v*'
-
-env:
-  GOPRIVATE: github.com/Adequnl3
   
 jobs:
   goreleaser:
@@ -54,6 +51,7 @@ jobs:
       - shell: bash
         id: report-generator-7
         run: |
+          sudo apt-get  install jq
           tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$tibreport"
           
