@@ -15,6 +15,7 @@ jobs:
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
+          scan-type: 'image'
           image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
           trivy-config: 'trivy.yaml'
 
@@ -31,7 +32,6 @@ jobs:
           spreadsheetId: 1iZOjBXgXPR9UQvSoNd7VtspS8TOQC9UTMkgWgBY2a3o
           commands: | # list of commands, specified as a valid JSON string
             [ 
-              { "command": "removeWorksheet", "args": { "worksheetTitle": "tyk-gateway" }},
               { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-gateway" }},
               { "command": "updateData", "args": { "data": ${{ steps.report-generator.outputs.scanreport }} }},
               { "command": "getData", "args": { "range": " 'tyk-gateway' !A2:B3" }}              
