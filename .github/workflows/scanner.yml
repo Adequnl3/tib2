@@ -22,6 +22,7 @@ jobs:
       - shell: bash
         id: report-generator
         run: |
+          cd ./ci/imagescan
           gateway_report=$(cat unified.json | jq -r '.Results[]? | .Target | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$gateway_report"
           
