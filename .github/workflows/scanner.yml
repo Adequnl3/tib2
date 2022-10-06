@@ -15,7 +15,6 @@ jobs:
       - name: Scan gateway
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          scan-type: 'image'
           image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
           trivy-config: trivy.yaml
 
