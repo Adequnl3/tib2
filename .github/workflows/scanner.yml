@@ -17,7 +17,7 @@ jobs:
         with:
           scan-type: 'image'
           image-ref: 'tykio/tyk-gateway:${{inputs.imagetag}}'
-          trivy-config: 'trivy.yaml'
+          trivy-config: trivy.yaml
 
       - shell: bash
         id: report-generator
