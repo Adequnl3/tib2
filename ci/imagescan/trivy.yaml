@@ -1,0 +1,26 @@
+timeout: 10m
+format: json
+dependency-tree: true
+list-all-pkgs: true
+exit-code: 1
+output: unified.json
+severity:
+  - HIGH
+  - CRITICAL
+scan:
+  skip-dirs:
+    - /lib64
+    - /lib
+    - /usr/lib
+    - /usr/include
+
+  security-checks:
+    - vuln
+    - secret
+    - config
+vulnerability:
+  type:
+    - os
+    - library
+  ignore-unfixed: true
+
