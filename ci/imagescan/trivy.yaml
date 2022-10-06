@@ -3,7 +3,7 @@ format: json
 dependency-tree: true
 list-all-pkgs: true
 exit-code: 1
-output: unified.json
+output: unified
 severity:
   - HIGH
   - CRITICAL
