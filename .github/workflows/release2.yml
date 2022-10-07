@@ -37,3 +37,41 @@ jobs:
             debvers: 'ubuntu/xenial ubuntu/bionic debian/jessie ubuntu/focal debian/buster debian/bullseye'
     outputs:
       tag: ${{ steps.targets.outputs.tag }}
+    
+    steps:
+      - name: set output
+        shell: bash
+        run:   echo "::set-output name=outputtag::$tag"
+
+      
+      - name: Scan TIB
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'tykio/tyk-identity-broker:${{steps.targets.outputs.tag}}'
+          format: 'json'
+          output: 'tyk-identity-broker.json'
+          severity: 'CRITICAL,HIGH'
+          security-checks: 'vuln,secret,config'
+          timeout: '5m0s'
+      - shell: bash
+        id: report-generator-7
+        run: |
+          tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          echo "::set-output name=scanreport::$tibreport"
+          
+      - name: 'update_worksheet'
+        uses: jroehl/gsheet.action@v1.1.0 # you can specify '@release' to always have the latest changes
+        continue-on-error: true
+        with:
+          spreadsheetId: 1e8gOT6LxfkIaFa0OLZh4POKARrtedhI-8LnUP2LO9vc
+          commands: | # list of commands, specified as a valid JSON string
+            [ 
+              { "command": "addWorksheet", "args": { "worksheetTitle": "tyk-identity-broker" }},
+              { "command": "updateData", "args": { "data": ${{ steps.report-generator-7.outputs.scanreport }} }},
+              { "command": "getData", "args": { "range": " 'tyk-identity-broker' !A2:B3" }}              
+            ]
+            
+        env:
+          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
+          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+    
