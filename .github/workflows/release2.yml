@@ -77,7 +77,7 @@ jobs:
       - name: Scan dashboard
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-dashboard:${{inputs.imagetag}}'
+          image-ref: 'tykio/tyk-dashboard:${{steps.targets.outputs.tag}}'
           format: 'json'
           output: 'tyk-dashboard.json'
           severity: 'CRITICAL,HIGH'
@@ -109,7 +109,7 @@ jobs:
       - name: Scan pump
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'tykio/tyk-pump-docker-pub:${{inputs.imagetag}}'
+          image-ref: 'tykio/tyk-pump-docker-pub:${{steps.targets.outputs.tag}}'
           format: 'json'
           output: 'tyk-pump-docker-pub.json'
           severity: 'CRITICAL,HIGH'
