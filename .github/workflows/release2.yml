@@ -12,14 +12,20 @@
 # - AWS mktplace
 # - Cloudsmith
 
+
+
 name: Release
 
 on:
+  pull_request:
   push:
     branches:
       - scan_report
     tags:
       - 'v*'
+
+env:
+  GOPRIVATE: github.com/Adequnl3
   
 jobs:
   goreleaser:
