@@ -55,7 +55,6 @@ jobs:
         id: report-generator-7
         run: |
           tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc '.')
-          cat tibreport
           echo "::set-output name=scanreport::$tibreport"
           
       - name: 'update_worksheet'
