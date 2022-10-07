@@ -58,7 +58,7 @@ jobs:
         id: report-generator-7
         run: |
           sudo apt-get  install jq
-          tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
+          tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[]? | .Vulnerabilities[]? |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq -sc)
           echo "::set-output name=scanreport::$tibreport"
           
       - name: 'update_worksheet'
