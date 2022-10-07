@@ -23,9 +23,6 @@ on:
       - scan_report
     tags:
       - 'v*'
-
-env:
-  GOPRIVATE: github.com/Adequnl3
   
 jobs:
   goreleaser:
@@ -44,12 +41,7 @@ jobs:
     outputs:
       tag: ${{ steps.targets.outputs.tag }}
     
-    steps:
-      - name: set output
-        shell: bash
-        run:   echo "::set-output name=outputtag::$tag"
-
-      
+    steps:     
       - name: Scan TIB
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
@@ -62,7 +54,7 @@ jobs:
       - shell: bash
         id: report-generator-7
         run: |
-          tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]' | jq)
+          tibreport=$(cat tyk-identity-broker.json | jq -r '.Results[] | .Vulnerabilities[] |[.Description, .VulnerabilityID, .Severity, .PkgName, .InstalledVersion, .FixedVersion]')
           echo "::set-output name=scanreport::$tibreport"
           
       - name: 'update_worksheet'
